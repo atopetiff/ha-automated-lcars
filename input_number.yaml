@@ -1,0 +1,102 @@
+livingroom_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Livingroom-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  unit_of_measurement: "C"
+  step: 0.5
+  mode: "slider"
+
+arbeitszimmer_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Arbeitszimmer-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  step: 0.5
+  unit_of_measurement: "C"
+  mode: "slider"
+
+sport_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Sport-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  unit_of_measurement: "C"
+  step: 0.5
+  mode: "slider"
+
+esszimmer_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Esszimmer-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  step: 0.5
+  unit_of_measurement: "C"
+  mode: "slider"
+
+bad_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Bad-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  step: 0.5
+  unit_of_measurement: "C"
+  mode: "slider"
+
+flur_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Flur-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  step: 0.5
+  unit_of_measurement: "C"
+  mode: "slider"
+
+schlafzimmer_default_temperatur:
+  min: 5.0
+  max: 30.0
+  name: "Schlafzimmer-default-temperatur"
+  icon: "mdi:temperature-celsius"
+  step: 0.5
+  unit_of_measurement: "C"
+  mode: "slider"
+
+b_guest_default_temperatur:
+  name: "b-guest-default-temperatur"
+  min: 5
+  max: 30
+  step: 0.5
+  initial: 20
+  unit_of_measurement: "C"
+  mode: slider
+  icon: "mdi:temperature-celsius"
+
+b_kitchen_default_temperatur:
+  name: "b-kitchen-default-temperatur"
+  min: 5
+  max: 30
+  step: 0.5
+  initial: 20
+  unit_of_measurement: "C"
+  mode: slider
+  icon: "mdi:temperature-celsius"
+
+b_flur_default_temperatur:
+  name: "b-flur-default-temperatur"
+  min: 5
+  max: 30
+  step: 0.5
+  initial: 20
+  unit_of_measurement: "C"
+  mode: slider
+  icon: "mdi:temperature-celsius"
+
+b_dining_default_temperatur:
+  name: "b-dining-default-temperatur"
+  min: 5
+  max: 30
+  step: 0.5
+  initial: 20
+  unit_of_measurement: "C"
+  mode: slider
+  icon: "mdi:temperature-celsius"

@@ -1,0 +1,49 @@
+alias: SetRgb
+sequence:
+  - action: light.turn_on
+    metadata: {}
+    data:
+      transition: 0
+      rgb_color:
+        - "{{ red }}"
+        - "{{ green }}"
+        - "{{ blue }}"
+      brightness_pct: 100
+    target:
+      entity_id: "{{ entities }}"
+    enabled: true
+description: ""
+fields:
+  entities:
+    selector:
+      entity:
+        multiple: true
+    name: entities
+    required: true
+  red:
+    selector:
+      number:
+        min: 0
+        max: 255
+        step: 1
+    name: red
+    required: true
+    default: 255
+  green:
+    selector:
+      number:
+        min: 0
+        max: 255
+        step: 1
+    name: green
+    required: true
+    default: 255
+  blue:
+    selector:
+      number:
+        min: 0
+        max: 255
+        step: 1
+    name: blue
+    required: true
+    default: 255

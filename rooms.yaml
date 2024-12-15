@@ -1,0 +1,835 @@
+type: vertical-stack
+cards:
+  - type: custom:html-card
+    title: ""
+    content: |
+      <!--STYLES-->
+      <div style="display: none;">&nbsp;</div>
+    view_layout:
+      grid-area: style
+    card_mod:
+      class:
+        - middle-blank
+      style: |
+        :host{
+          --ov-lcars-border-left: 8rem
+        }
+        :host{
+         
+
+        }
+        :host {
+          --masonry-view-card-margin: 4px;
+          --slider-color: var(--lcars-card-button);
+          --card-background-color: var(--lcars-ui-quaternary);
+
+        }
+        ha-card{
+          height: 100%;
+        }
+        hui-conditional-card{
+          max-height: 100%;
+        }
+
+        :host{
+          
+         --ha-card-border-radius: 0px;
+        }
+        #root{
+          margin: 1.5rem 0.5rem 0.5rem 0.5rem;
+
+          --vertical-stack-card-gap: 4px;
+
+          display: grid !important; 
+
+          grid-template-columns: 50px 1fr; 
+          grid-template-rows: 0px auto  1fr auto auto;  
+          grid-template-areas: 
+            "style style"
+            "header header"
+            "menu content"
+            "menu buttons"
+            "footer footer"; 
+        }
+        #root>*:nth-child(1) { grid-area: style; }
+        #root>*:nth-child(2) { grid-area: header; }
+        #root>*:nth-child(3) { grid-area: menu; }
+        #root>*:nth-child(4) { grid-area: buttons; }
+        #root>*:nth-child(5) { grid-area: content; }
+        #root>*:nth-child(6) { grid-area: footer; }
+  - type: custom:html-card
+    title: ""
+    content: |
+
+      <h1 >Räume</h1>
+    view_layout:
+      grid-area: style
+    card_mod:
+      class:
+        - header-left
+  - type: custom:html-card
+    title: ""
+    content: |
+      <div style="height: 100%"></div>
+    view_layout:
+      grid-area: border-left
+    card_mod:
+      class: middle-left
+      style: |
+        :host {
+          --masonry-view-card-margin: 4px;
+          --slider-color: var(--lcars-card-button);
+          --card-background-color: var(--lcars-ui-quaternary);
+
+        }
+        ha-card {
+          height: 100%;
+        }
+  - type: horizontal-stack
+    cards:
+      - type: custom:html-card
+        title: ""
+        content: |
+          <div style="display: none;">&nbsp;</div>
+        view_layout:
+          grid-area: style
+        card_mod:
+          class:
+            - middle-blank
+          style: |
+
+            :host {
+              
+              --masonry-view-card-margin: 2px 4px 2px 4px;
+              
+            }
+
+
+
+            :host{
+              
+              --ha-card-border-radius: 30px;
+            }
+            #root{
+            --vertical-stack-card-gap: 4px;
+            padding-right: 8px;
+            }
+            #root>hui-card{
+            #display:block !important;
+            }
+            #root>*:last-child {
+              flex-grow:1;
+              
+            }
+            #root>*:first-child{
+              display: none;
+              }
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: none
+        name: AUS
+        icon: mdi:power
+        hold_action:
+          action: perform-action
+          perform_action: script.setpowerentities
+          target: {}
+          data:
+            room: Alle
+            label: PowerToggle
+            target_state: false
+        theme: LCARS 25C (Red Alert)
+        card_mod:
+          class:
+            - button-barrel-left
+            - menu-button
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: perform-action
+          perform_action: script.setpowerentities
+          target: {}
+          data:
+            room: Alle
+            label: Licht
+            target_state: false
+        name: Licht AUS
+        icon: mdi:lightbulb-off-outline
+        hold_action:
+          action: perform-action
+          perform_action: script.setpowerentities
+          target: {}
+          data:
+            room: Alle
+            label: Licht
+            target_state: true
+        theme: LCARS 25C
+        card_mod:
+          class:
+            - button-barrel-left
+            - menu-button
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: perform-action
+          perform_action: script.setpowerentities
+          target: {}
+          data:
+            room: Alle
+            label: Anlage
+            target_state: false
+        icon: mdi:speaker
+        name: Media aus
+        theme: LCARS 25C (Blue Alert)
+        card_mod:
+          class:
+            - button-barrel-left
+            - menu-button
+    view_layout:
+      grid-area: buttons
+  - type: vertical-stack
+    cards:
+      - type: custom:html-card
+        title: ""
+        content: |
+          <!--STYLES-->
+          <div style="display: none;">&nbsp;</div>
+        view_layout:
+          grid-area: style
+        card_mod:
+          class:
+            - middle-blank
+          style: |
+            :host{
+              --ov-lcars-border-left: 8rem
+            }
+            :host{
+             
+
+            }
+            :host {
+              --masonry-view-card-margin: 4px;
+              --slider-color: var(--lcars-card-button);
+              --card-background-color: var(--lcars-ui-quaternary);
+
+            }
+            ha-card{
+              height: 100%;
+            }
+            hui-conditional-card{
+              max-height: 100%;
+            }
+
+            :host{
+              
+             --ha-card-border-radius: 30px;
+            }
+            #root{
+              #padding-top: 1rem;
+              --vertical-stack-card-gap: 2px;
+              justify-content: end;
+              display: grid !important;
+              grid-template-columns: 1fr;
+              grid-template-rows: 0px 1fr auto 1fr
+              
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ""
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+                :host{
+                 
+
+                }
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 0px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 4px;
+
+                  display: grid !important; 
+
+                  grid-template-columns: 1fr 1fr 1fr; 
+                  grid-template-rows: 0px 0px 1fr 1fr 1fr auto;  
+                  grid-template-areas: 
+                    "style style style"
+                    "header header header"
+                    "server heizung bad"
+                    "werkstatt flur wasch"
+                    "wohn kitchen guest"
+                    "footer footer footer"; 
+                }
+                #root>*:nth-child(1) { grid-area: style; }
+                #root>*:nth-child(2) { grid-area: header; display: none; }
+                #root>*:nth-child(3) { grid-area: server; }
+                #root>*:nth-child(4) { grid-area: heizung; }
+                #root>*:nth-child(5) { grid-area: bad; }
+                #root>*:nth-child(6) { grid-area: werkstatt; }
+                #root>*:nth-child(7) { grid-area: flur; }
+                #root>*:nth-child(8) { grid-area: wasch; }
+                #root>*:nth-child(9) { grid-area: wohn; }
+                #root>*:nth-child(10) { grid-area: kitchen; }
+                #root>*:nth-child(11) { grid-area: guest; }
+                #root>*:nth-child(12) { grid-area: footer; }
+          - type: custom:html-card
+            title: ""
+            content: |
+
+              <h1 >Keller</h1>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - header-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: ""
+            name: Server
+            icon: mdi:server
+            theme: LCARS 25C
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/kg-heizung
+            name: Heizung
+            icon: mdi:heating-coil
+            theme: LCARS Kronos
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            name: Bad
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            name: Werkstatt
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/kg-flur
+            name: Flur
+            entity: climate.b_flur_trv
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            name: "Waschküche "
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/kg-esszimmer
+            name: Wohnzimmer
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/kg-kuche
+            name: Küche
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/gastezimmer
+            name: Gästezimmer
+            entity: sensor.b_guest_ht2_temperature
+            show_state: true
+            theme: LCARS TNG
+            icon: mdi:bed
+            card_mod:
+              class: button-barrel-left
+          - type: custom:html-card
+            title: ""
+            content: |
+              Keller
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - footer-left
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ""
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+                :host{
+                 
+
+                }
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 0px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 4px;
+
+                  display: grid !important; 
+
+                  grid-template-columns:  2fr 1.3fr 0.7fr; 
+                  grid-template-rows: 0px auto 1fr auto;  
+                  grid-template-areas: 
+                    "style style style"
+                    "header header header"
+                    "ausentreppe solar solartotal"
+
+                    "footer footer footer"; 
+                }
+                #root>*:nth-child(1) { grid-area: style; }
+                #root>*:nth-child(2) { grid-area: header; }
+                #root>*:nth-child(3) { grid-area: ausentreppe; }
+                #root>*:nth-child(4) { grid-area: solar; }
+                #root>*:nth-child(5) { grid-area: solartotal; }
+                #root>*:nth-child(6) { grid-area: footer; }
+          - type: custom:html-card
+            title: ""
+            content: |
+
+              <h1 >EG</h1>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - header-left
+              style: |
+                :host{
+                  
+                  --ha-card-border-radius: 0px;
+                }
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/t
+            name: Außentreppe
+            theme: LCARS Romulus
+            icon: mdi:stairs
+            entity: light.ausen_1plus_treppenlicht_switch_0
+            hold_action:
+              action: toggle
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/solar
+            name: Solar
+            theme: LCARS 25C (Yellow Alert)
+            icon: ""
+            entity: input_number.solarpower
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/solar
+            name: Total
+            theme: LCARS 25C (Yellow Alert)
+            icon: ""
+            entity: input_number.solartotal
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - type: custom:html-card
+            title: ""
+            content: |
+
+              <div>&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - footer-left
+              style: |
+                :host{
+                  
+                  --ha-card-border-radius: 30px;
+                }
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ""
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+                :host{
+                 
+
+                }
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 0px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 4px;
+
+                  display: grid !important; 
+
+                  grid-template-columns: 1fr 1fr 1fr; 
+                  grid-template-rows: 0px auto 1fr 1fr 1fr auto;  
+                  grid-template-areas: 
+                    "style style style"
+                    "header header header"
+                    "dining kitchen bad"
+                    "living flur office"
+                    "living sport bedroom"
+                    "footer footer footer"; 
+                }
+                #root>*:nth-child(1) { grid-area: style; }
+                #root>*:nth-child(2) { grid-area: header; }
+                #root>*:nth-child(3) { grid-area: dining; }
+                #root>*:nth-child(4) { grid-area: kitchen; }
+                #root>*:nth-child(5) { grid-area: bad; }
+                #root>*:nth-child(6) { grid-area: living; }
+                #root>*:nth-child(7) { grid-area: flur; }
+                #root>*:nth-child(8) { grid-area: office; }
+                #root>*:nth-child(9) { grid-area: sport; }
+                #root>*:nth-child(10) { grid-area: bedroom; }
+                #root>*:nth-child(11) { grid-area: footer; display: none;}
+          - type: custom:html-card
+            title: ""
+            content: |
+
+              <h1 >EG</h1>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - header-left
+              style: |
+                :host{
+                  
+                  --ha-card-border-radius: 0px;
+                }
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/esszimmer
+            name: Esszimmer
+            theme: LCARS Lower Decks II
+            icon: mdi:silverware-fork-knife
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Esszimmer
+                label: PowerToggle
+                target_state: false
+            entity: sensor.dining_ht_temperature
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/kuche
+            name: Küche
+            theme: LCARS Navigation
+            icon: mdi:chef-hat
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Küche
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/bad
+            name: Bad
+            theme: LCARS Transporter
+            icon: mdi:shower
+            entity: sensor.bad_ht_temperature
+            show_state: true
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Bad
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/wohnzimmer
+            name: Wohnzimmer
+            theme: LCARS Lower Decks I
+            icon: mdi:sofa
+            entity: sensor.livingroom_ht2_temperature
+            show_state: true
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Wohnzimmer
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/flur
+            name: Flur
+            icon: mdi:directions-fork
+            theme: LCARS Romulus
+            entity: sensor.flur_ht3_temperature
+            show_state: true
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Flur
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/office
+            name: Office
+            theme: LCARS Classic
+            icon: mdi:desktop-classic
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Arbeitszimmer
+                label: PowerToggle
+                target_state: false
+            entity: sensor.office_ht3_temperature
+            show_state: true
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/sport
+            name: Sport
+            theme: LCARS Breen
+            icon: mdi:dumbbell
+            entity: sensor.b_dining_ht_temperature
+            show_state: true
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Sport
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/schlafzimmer
+            name: Schlafzimmer
+            theme: LCARS Zeldaar
+            icon: mdi:bed-king
+            entity: sensor.bedroom_ht3_temperature
+            show_state: true
+            hold_action:
+              action: perform-action
+              perform_action: script.setpowerentities
+              target: {}
+              data:
+                room: Schlafzimmer
+                label: PowerToggle
+                target_state: false
+            card_mod:
+              class: button-barrel-left
+          - type: custom:html-card
+            title: ""
+            content: |
+
+              <div>&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - footer-left
+              style: |
+                :host{
+                  
+                  --ha-card-border-radius: 30px;
+                }
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+    card_mod:
+      style: |
+        #root{
+          gap: 0;
+          justify-content: end;
+        }
+  - type: custom:html-card
+    title: ""
+    content: |
+      &nbsp;
+    view_layout:
+      grid-area: style
+    card_mod:
+      class:
+        - footer-left
+card_mod:
+  style: |
+    #root{
+      gap: 0;
+      justify-content: end;
+    }

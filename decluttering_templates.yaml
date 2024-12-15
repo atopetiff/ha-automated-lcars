@@ -1,0 +1,330 @@
+decluttering_templates:
+  climate_slider_button:
+    default:
+      - name: BT
+    card:
+      type: vertical-stack
+      cards:
+        - type: conditional
+          conditions:
+            - condition: state
+              entity: '[[window]]'
+              state: '[[window_on_val]]'
+          card:
+            show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: none
+            name: Fenster offen! Heizung aus
+            hold_action:
+              action: none
+            theme: LCARS 25C (Yellow Alert)
+            card_mod:
+              class: button-lozenge-left
+        - type: conditional
+          conditions:
+            - condition: state
+              entity: '[[window]]'
+              state: '[[window_off_val]]'
+          card:
+            type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 2fr 1fr
+              grid-template-rows: auto
+              gap: 0px 0px
+              margin: '-4px -4px -4px -4px'
+              padding: 0
+              grid-template-areas: |
+                "left right"
+            cards:
+              - type: custom:slider-button-card
+                entity: '[[climate]]'
+                slider:
+                  direction: left-right
+                  background: gradient
+                  use_state_color: false
+                  use_percentage_bg_opacity: false
+                  show_track: false
+                  toggle_on_click: false
+                  force_square: false
+                  show_attribute: true
+                show_name: false
+                show_state: true
+                compact: true
+                icon:
+                  show: true
+                  use_state_color: true
+                  tap_action:
+                    action: more-info
+                  icon: mdi:thermometer
+                action_button:
+                  mode: toggle
+                  icon: mdi:power
+                  show: false
+                  show_spinner: true
+                  tap_action:
+                    action: toggle
+                show_attribute: true
+                attribute: current_temperature
+                card_mod:
+                  class: button-capped-left
+                view_layout:
+                  grid-area: left
+              - show_name: false
+                show_icon: true
+                type: button
+                tap_action:
+                  action: perform-action
+                  perform_action: script.settemperaturefromhelper
+                  target: {}
+                  data:
+                    entities:
+                      - '[[climate]]'
+                    helper: '[[default_temp_entity]]'
+                entity: '[[default_temp_entity]]'
+                show_state: true
+                view_layout:
+                  grid-area: right
+                card_mod:
+                  class: button-capped-right
+            view_layout:
+              grid-area: content
+  climate_slider_show_value:
+    default:
+      - name: TRV
+    card:
+      type: custom:restriction-card
+      restrictions:
+        block: true
+      card:
+        type: custom:slider-button-card
+        entity: '[[climate]]'
+        slider:
+          direction: left-right
+          background: gradient
+          use_state_color: false
+          use_percentage_bg_opacity: false
+          show_track: false
+          toggle_on_click: true
+          force_square: false
+          show_attribute: false
+        show_name: true
+        show_state: true
+        compact: true
+        icon:
+          show: false
+          use_state_color: false
+          tap_action:
+            action: more-info
+          icon: ''
+        action_button:
+          mode: custom
+          icon: mdi:power
+          show: false
+          show_spinner: true
+          tap_action:
+            action: none
+        show_attribute: true
+        name: '[[name]]'
+        card_mod:
+          class: button-lozenge-right
+  cover_slider_buttons:
+    default:
+      - room: Wohnzimmer
+    card:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: 1.2fr 1.8fr 1.5fr
+        grid-template-rows: auto
+        gap: 0px 0px
+        margin: '-4px -4px -4px -4px'
+        padding: 0
+        grid-template-areas: |
+          "open slider close"
+          "open slider summer"
+      cards:
+        - show_name: true
+          show_icon: true
+          type: button
+          tap_action:
+            action: perform-action
+            perform_action: script.setcoversbyroom
+            target: {}
+            data:
+              room: '[[room]]'
+              target_pos: 100
+          name: Auf
+          view_layout:
+            grid-area: open
+          card_mod:
+            class: button-capped-left
+        - type: custom:slider-button-card
+          entity: '[[cover]]'
+          slider:
+            direction: top-bottom
+            background: gradient
+            use_state_color: false
+            use_percentage_bg_opacity: false
+            toggle_on_click: false
+            show_track: false
+            force_square: false
+            invert: true
+            show_attribute: true
+          show_name: false
+          show_state: true
+          compact: true
+          icon:
+            show: true
+            use_state_color: true
+            tap_action:
+              action: more-info
+            icon: ''
+          action_button:
+            mode: toggle
+            icon: mdi:power
+            show: false
+            show_spinner: true
+            tap_action:
+              action: toggle
+          show_attribute: false
+          attribute: current_position
+          view_layout:
+            grid-area: slider
+          card_mod:
+            class: button-barrel-left
+        - show_name: true
+          show_icon: true
+          type: button
+          tap_action:
+            action: perform-action
+            perform_action: script.setcoversbyroom
+            target: {}
+            data:
+              room: '[[room]]'
+              target_pos: 0
+          name: Zu
+          view_layout:
+            grid-area: close
+          card_mod:
+            class: button-capped-right
+        - show_name: true
+          show_icon: true
+          type: button
+          tap_action:
+            action: perform-action
+            perform_action: script.setcoversbyroom
+            target: {}
+            data:
+              room: '[[room]]'
+              target_pos: 13
+          name: Summer
+          view_layout:
+            grid-area: summer
+          card_mod:
+            class: button-capped-right
+      grid_options:
+        columns: 36
+        rows: auto
+      view_layout:
+        grid-area: content
+  battery_warn:
+    default:
+      - entity: sensor.livingroom_trv_1_battery
+      - below: 30
+      - battery_type: AA
+      - battery_count: 1
+      - class: button-lozenge-left
+      - name: testname
+      - theme: LCARS 25C (Red Alert)
+    card:
+      type: conditional
+      conditions:
+        - condition: numeric_state
+          entity: '[[entity]]'
+          below: '[[below]]'
+      card:
+        show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        entity: '[[entity]]'
+        show_state: true
+        theme: '[[theme]]'
+        name: '[[name]] ([[battery_count]]*[[battery_type]])'
+        card_mod:
+          class: '[[class]]'
+  splitter_left_menu:
+    default:
+      - name: NAME
+    card:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: 1fr auto auto
+        grid-template-rows: 0px auto auto
+        gap: 0px 0px
+        margin: 2px -4px -2px -4px
+        padding: 0
+        grid-template-areas: |
+          "style style style"
+          "footer name closing"
+          "header name closing"
+      cards:
+        - type: custom:html-card
+          title: ''
+          content: |
+            <div style="display: none;">&nbsp;</div>
+          view_layout:
+            grid-area: style
+          card_mod:
+            class:
+              - middle-blank
+            style: |
+              :host {
+                --masonry-view-card-margin: 2px 4px 2px 4px;
+                --ha-card-border-radius: 00px;
+              }
+        - type: custom:html-card
+          title: ''
+          content: |
+            &nbsp;
+          view_layout:
+            grid-area: footer
+          card_mod:
+            class:
+              - footer-left
+              - footer-menu-left
+        - type: custom:html-card
+          title: ''
+          content: |
+            &nbsp;
+          view_layout:
+            grid-area: header
+          card_mod:
+            class:
+              - header-left
+              - header-menu-left
+        - type: custom:html-card
+          title: ''
+          content: |
+            <h1>[[name]]<h1>
+          view_layout:
+            grid-area: name
+          card_mod:
+            class:
+              - middle-blank
+        - type: custom:html-card
+          title: ''
+          content: |
+            <div class="closing">&nbsp;</div>
+          view_layout:
+            grid-area: closing
+          card_mod:
+            class:
+              - closer
+      view_layout:
+        grid-area: info

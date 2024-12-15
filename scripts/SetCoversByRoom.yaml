@@ -1,0 +1,26 @@
+alias: SetCoversByRoom
+sequence:
+  - action: script.getcoverentities
+    data:
+      room: "{{room}}"
+    response_variable: entities
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: "{{target_pos}}"
+    target:
+      entity_id: "{{entities.value}}"
+description: ""
+fields:
+  room:
+    selector:
+      text: null
+    name: room
+    default: Alle
+  target_pos:
+    selector:
+      number:
+        min: 1
+        max: 100
+        step: 1
+    name: target_pos

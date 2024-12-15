@@ -1,0 +1,17 @@
+alias: SetRgb-Blue
+sequence:
+  - action: script.setrgb
+    data:
+      red: 0
+      blue: 255
+      green: 0
+      entities: "{{ entities }}"
+description: ""
+fields:
+  entities:
+    selector:
+      entity:
+        multiple: true
+    name: entities
+    required: true
+icon: mdi:led-strip

@@ -1,0 +1,81 @@
+(DO NOT USE/MODIFY)=== card-mod CSS: &card-mod-css # Card modifications
+  card-mod-card-yaml: &card-mod-card |
+    .: |
+    
+      /*... all the code from ha-lcars*/
+
+      /* =============================================== */
+      /*            ATOPE-TIFF-OVERWRITES                */
+      /* =============================================== */
+      ha-card.header-left.header-menu-left,
+      ha-card.header-right.header-menu-left,
+      ha-card.header-contained.header-menu-left,
+      ha-card.header-open.header-menu-left{
+          border-left-width: calc(var(--ov-lcars-border-left) - 8px);
+      }
+      ha-card.middle-left.middle-menu-left{
+          border-left-width: calc(var(--ov-lcars-border-left) - 8px);
+      }
+      ha-card.footer-left.footer-menu-left,
+      ha-card.footer-right.footer-menu-left,
+      ha-card.footer-contained.footer-menu-left,
+      ha-card.footer-open.footer-menu-left{
+          border-left-width: calc(var(--ov-lcars-border-left) - 8px);
+      }
+
+       ha-card.type-custom-mushroom-chips-card > * {
+        --primary-text-color: white;
+        font-size: 4rem;
+        padding: 0;
+      }
+      grid-layout hui-vertical-stack-card{
+        margin: 0px;
+      }
+
+      .menu-button{
+        max-width: 100%;
+      }
+      ha-card.closer {
+        height: 100%;
+        position: relative;
+        width: 2rem;
+        background-color: black !important;
+        
+      }
+      ha-card.closer .closing
+      {
+        background-color: var(--lcars-card-mid-left-color);
+        height: 2rem;
+        width: calc(2rem - 4px);
+        border-top-right-radius: 1rem !important;
+        border-bottom-right-radius: 1rem !important;
+        position: absolute;
+        top: 50%;
+        left:0;
+        transform: translateY(-50%)
+      }
+      ha-card.closer .closing.closing-right
+      {
+        left: unset;
+        right: 0;
+        border-top-left-radius: 1rem !important;
+        border-bottom-left-radius: 1rem !important;
+      }
+      *, * *{
+        transition: none !important;
+      }
+      ha-card.lcars-info-chip{
+        flex-direction: row;
+        border-radius: 0px !important;
+        background: black;
+        justify-content: flex-start;
+        align-items: baseline;
+        gap: 0.2rem;
+      }
+      ha-card.lcars-info-chip ha-state-icon{
+        width: 1.3rem;
+        color: white; 
+      }
+      ha-card.lcars-info-chip span{
+        font-size: 1.1rem;
+        font-weight: bold;

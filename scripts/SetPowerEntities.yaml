@@ -1,0 +1,28 @@
+alias: SetPowerEntities
+sequence:
+  - sequence:
+      - action: script.getpowerentities
+        data:
+          room: "{{room}}"
+          label: "{{label}}"
+        response_variable: entities
+      - action: script.setentities
+        data:
+          target_state: "{{target_state}}"
+          entities: "{{ entities.value }}"
+description: ""
+fields:
+  room:
+    selector:
+      text: null
+    name: room
+    default: Alle
+  label:
+    selector:
+      text: null
+    name: label
+    default: PowerToggle
+  target_state:
+    selector:
+      boolean: {}
+    name: target_state
