@@ -60,7 +60,8 @@ But with that you can take another look if my explanation is confusing.
    1. be aware the rooms link needs to be changed to match your config see todo
 10. use linked lovelave template card in final dashboard
    1. select template like in linkend-lovelace descriped
-    ```yaml
+
+```yaml
     ll_template: lcars_control
         ll_context:
             room: Schlafzimmer # name of the Room (need to match with area name)
@@ -71,11 +72,11 @@ But with that you can take another look if my explanation is confusing.
             window: binary_sensor.bedroom_dw2_door # window sensor which toggels heating of (if window open the thermostat gets hidden and a message appears)
             window_off_val: 'off' # window sensor closed value 
             window_on_val: 'on' #  window sensor open value
-    ```
+```
 11. create card like in [config.yaml](config.yaml)
 12. use linked lovelave template card in final dashboard (i used a seperate dashboard for config)
-   1. 
-   ```yaml
+
+```yaml
     ll_template: lcars_room_config
         ll_context:
         room: Gästezimmer # name of the Room (need to match with area name)
