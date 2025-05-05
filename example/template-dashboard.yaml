@@ -70,6 +70,235 @@ views:
             content: This is some real cool unique content  with a period.
             title: lihjkhkj
       - type: custom:linked-lovelace-status
+      - type: tile
+        entity: weather.forecast_home
+        state_content: temperature
+      - type: weather-forecast
+        entity: weather.forecast_home
+        forecast_type: daily
+  - type: masonry
+    path: base-template
+    title: base-template
+    theme: LCARS Modern
+    cards:
+      - ll_key: cover
+        type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 1.2fr 1.8fr 1.5fr
+          grid-template-rows: auto
+          gap: 0px 0px
+          margin: '-4px 0px -4px 0px'
+          padding: 0
+          grid-template-areas: |
+            "open slider close"
+            "open slider summer"
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: <%= context.room %>
+                target_pos: 100
+            name: Auf
+            view_layout:
+              grid-area: open
+            card_mod:
+              class: button-capped-left
+          - type: custom:slider-button-card
+            entity: <%= context.cover %>
+            slider:
+              direction: top-bottom
+              background: gradient
+              use_state_color: false
+              use_percentage_bg_opacity: false
+              toggle_on_click: false
+              show_track: false
+              force_square: false
+              invert: true
+              show_attribute: true
+            show_name: false
+            show_state: true
+            compact: true
+            icon:
+              show: true
+              use_state_color: true
+              tap_action:
+                action: more-info
+              icon: ''
+            action_button:
+              mode: toggle
+              icon: mdi:power
+              show: false
+              show_spinner: true
+              tap_action:
+                action: toggle
+            show_attribute: false
+            attribute: current_position
+            view_layout:
+              grid-area: slider
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: <%= context.room %>
+                target_pos: 0
+            name: Zu
+            view_layout:
+              grid-area: close
+            card_mod:
+              class: button-capped-right
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: <%= context.room %>
+                target_pos: 13
+            name: Summer
+            view_layout:
+              grid-area: summer
+            card_mod:
+              class: button-capped-right
+        view_layout:
+          grid-area: content
+      - type: vertical-stack
+        cards:
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: '[[window]]'
+                state: '[[window_on_val]]'
+            card:
+              show_name: true
+              show_icon: false
+              type: button
+              tap_action:
+                action: none
+              name: Fenster offen! Heizung aus
+              hold_action:
+                action: none
+              theme: LCARS 25C (Yellow Alert)
+              card_mod:
+                class: button-lozenge-left
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: '[[window]]'
+                state: '[[window_off_val]]'
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: 2fr 1fr
+                grid-template-rows: auto
+                gap: 0px 0px
+                margin: '-4px -4px -4px -4px'
+                padding: 0
+                grid-template-areas: |
+                  "left right"
+              cards:
+                - type: custom:slider-button-card
+                  entity: '[[climate]]'
+                  slider:
+                    direction: left-right
+                    background: gradient
+                    use_state_color: false
+                    use_percentage_bg_opacity: false
+                    show_track: false
+                    toggle_on_click: false
+                    force_square: false
+                    show_attribute: true
+                  show_name: false
+                  show_state: true
+                  compact: true
+                  icon:
+                    show: true
+                    use_state_color: true
+                    tap_action:
+                      action: more-info
+                    icon: mdi:thermometer
+                  action_button:
+                    mode: toggle
+                    icon: mdi:power
+                    show: false
+                    show_spinner: true
+                    tap_action:
+                      action: toggle
+                  show_attribute: true
+                  attribute: current_temperature
+                  card_mod:
+                    class: button-capped-left
+                  view_layout:
+                    grid-area: left
+                - show_name: false
+                  show_icon: true
+                  type: button
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.settemperaturefromhelper
+                    target: {}
+                    data:
+                      entities:
+                        - '[[climate]]'
+                      helper: '[[default_temp_entity]]'
+                  entity: '[[default_temp_entity]]'
+                  show_state: true
+                  view_layout:
+                    grid-area: right
+                  card_mod:
+                    class: button-capped-right
+              view_layout:
+                grid-area: content
+      - ll_key: slider_show_value_disabled
+        type: custom:restriction-card
+        restrictions:
+          block: true
+        card:
+          type: custom:slider-button-card
+          entity: '[[climate]]'
+          slider:
+            direction: left-right
+            background: gradient
+            use_state_color: false
+            use_percentage_bg_opacity: false
+            show_track: false
+            toggle_on_click: true
+            force_square: false
+            show_attribute: false
+          show_name: true
+          show_state: true
+          compact: true
+          icon:
+            show: false
+            use_state_color: false
+            tap_action:
+              action: more-info
+            icon: ''
+          action_button:
+            mode: custom
+            icon: mdi:power
+            show: false
+            show_spinner: true
+            tap_action:
+              action: none
+          show_attribute: true
+          name: '[[name]]'
+          card_mod:
+            class: button-lozenge-right
   - type: panel
     path: config
     title: config
@@ -83,7 +312,7 @@ views:
             title: ''
             content: |
               <!--STYLES-->
-              <div style="display: none;">&nbsp;</div>
+              <div style="display: none;"> &nbsp;</div>
             view_layout:
               grid-area: style
             card_mod:
@@ -157,7 +386,7 @@ views:
                         "style style"
                         "menu content"; 
                       
-                      margin-bottom: -8px;
+                      margin-bottom: 0px;
                     }
                     #root>hui-card{
                       display:block !important;
@@ -696,6 +925,1148 @@ views:
               gap: 0;
               justify-content: end;
             }
+  - type: masonry
+    path: flur
+    title: Flur
+    theme: LCARS Breen
+    cards:
+      - ll_key: flur_config
+        type: vertical-stack
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: 100%
+                grid-template-rows: auto
+                margin: '-4px 0px -4px 0px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Flur
+                  label: Standard-Temperatur
+                  options:
+                    type: custom:slider-button-card
+                    entity: this.entity_id
+                    slider:
+                      direction: left-right
+                      background: solid
+                      use_state_color: false
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: true
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: more-info
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: false
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    show_attribute: true
+                    name: Standard
+                    card_mod:
+                      class: button-lozenge-left
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+          - type: custom:html-card
+            title: ''
+            content: |
+              <h1>Planung: Heizung</h1>
+            card_mod:
+              class: header-contained
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: 100%
+                grid-template-rows: auto
+                margin: '-8px 0px -8px 0px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Flur
+                  label: Thermostat
+                  options:
+                    type: custom:scheduler-card
+                    entities:
+                      - this.entity_id
+                    include:
+                      - this.entity_id
+                    exclude: []
+                    discover_existing: false
+                    title: this.entity_id
+                    sort_by:
+                      - state
+                      - relative-time
+                    display_options:
+                      primary_info: default
+                      secondary_info:
+                        - relative-time
+                        - time
+                      icon: action
+                    show_state: true
+                    card_mod:
+                      class: middle-contained
+                      style: |
+                        :host {
+                          --masonry-view-card-margin: 4px 0px 2px 0px;
+                        }
+                - area: Flur
+                  label: PowerToggle
+                  options:
+                    type: custom:scheduler-card
+                    entities:
+                      - this.entity_id
+                    include:
+                      - this.entity_id
+                    exclude: []
+                    discover_existing: false
+                    title: this.entity_id
+                    sort_by:
+                      - state
+                      - relative-time
+                    display_options:
+                      primary_info: default
+                      secondary_info:
+                        - relative-time
+                        - time
+                      icon: action
+                    show_state: true
+                    card_mod:
+                      class: middle-contained
+                      style: |
+                        :host {
+                          --masonry-view-card-margin: 2px 0px 4px 0px;
+                        }
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+          - type: custom:html-card
+            title: ''
+            content: |
+              &nbsp;
+            card_mod:
+              class: footer-contained
+      - ll_template: cover
+        ll_context:
+          room: Sport
+          cover: cover.fitness_cover2pmplus
+        type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 1.2fr 1.8fr 1.5fr
+          grid-template-rows: auto
+          gap: 0px 0px
+          margin: '-4px 0px -4px 0px'
+          padding: 0
+          grid-template-areas: |
+            "open slider close"
+            "open slider summer"
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: Sport
+                target_pos: 100
+            name: Auf
+            view_layout:
+              grid-area: open
+            card_mod:
+              class: button-capped-left
+          - type: custom:slider-button-card
+            entity: cover.fitness_cover2pmplus
+            slider:
+              direction: top-bottom
+              background: gradient
+              use_state_color: false
+              use_percentage_bg_opacity: false
+              toggle_on_click: false
+              show_track: false
+              force_square: false
+              invert: true
+              show_attribute: true
+            show_name: false
+            show_state: true
+            compact: true
+            icon:
+              show: true
+              use_state_color: true
+              tap_action:
+                action: more-info
+              icon: ''
+            action_button:
+              mode: toggle
+              icon: mdi:power
+              show: false
+              show_spinner: true
+              tap_action:
+                action: toggle
+            show_attribute: false
+            attribute: current_position
+            view_layout:
+              grid-area: slider
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: Sport
+                target_pos: 0
+            name: Zu
+            view_layout:
+              grid-area: close
+            card_mod:
+              class: button-capped-right
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setcoversbyroom
+              target: {}
+              data:
+                room: Sport
+                target_pos: 13
+            name: Summer
+            view_layout:
+              grid-area: summer
+            card_mod:
+              class: button-capped-right
+        view_layout:
+          grid-area: content
+      - type: custom:linked-lovelace-status
+      - type: custom:auto-entities
+        card:
+          type: entities
+        filter:
+          include:
+            - area: Flur
+              label: Thermostat
+          exclude: []
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          card_mod:
+            class: middle-left
+          layout_type: custom:grid-layout
+          layout:
+            grid-template-columns: 50% 50%
+            grid-template-rows: auto
+        filter:
+          include:
+            - area: Flur
+              label: Battery
+              state: <= 100
+              options:
+                type: custom:config-template-card
+                entities:
+                  - this.entity_id
+                card:
+                  type: button
+                  entity: this.entity_id
+                  show_state: true
+                  theme: LCARS 25C (Red Alert)
+                  card_mod:
+                    class: button-lozenge-left
+          exclude: []
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            grid-template-columns: 100%
+            grid-template-rows: auto
+          card_mod:
+            class: middle-left
+        filter:
+          include:
+            - area: Flur
+              label: PowerToggle
+              options:
+                type: button
+                include:
+                  - this.entity_id
+                exclude: []
+                discover_existing: false
+                title: ''
+                sort_by:
+                  - state
+                  - relative-time
+                display_options:
+                  primary_info: default
+                  secondary_info:
+                    - relative-time
+                    - time
+                  icon: action
+                card_mod:
+                  class: button-lozenge-left
+                card:
+                  type: custom:scheduler-card
+                  card_mod:
+                    class: middle-contained
+                  show_state: true
+          exclude: []
+        show_empty: true
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            grid-template-columns: 100%
+            grid-template-rows: auto
+            margin: '-8px 0px -8px 0px'
+          card_mod:
+            class: middle-left
+        filter:
+          include:
+            - area: Flur
+              label: Thermostat
+              options:
+                type: custom:scheduler-card
+                entities:
+                  - this.entity_id
+                include:
+                  - this.entity_id
+                exclude: []
+                discover_existing: false
+                title: this.entity_id
+                sort_by:
+                  - state
+                  - relative-time
+                display_options:
+                  primary_info: default
+                  secondary_info:
+                    - relative-time
+                    - time
+                  icon: action
+                show_state: true
+                card_mod:
+                  class: middle-contained
+                  style: |
+                    :host {
+                      --masonry-view-card-margin: 4px 0px 2px 0px;
+                    }
+            - area: Flur
+              label: PowerToggle
+              options:
+                type: custom:scheduler-card
+                entities:
+                  - this.entity_id
+                include:
+                  - this.entity_id
+                exclude: []
+                discover_existing: false
+                title: this.entity_id
+                sort_by:
+                  - state
+                  - relative-time
+                display_options:
+                  primary_info: default
+                  secondary_info:
+                    - relative-time
+                    - time
+                  icon: action
+                show_state: true
+                card_mod:
+                  class: middle-contained
+                  style: |
+                    :host {
+                      --masonry-view-card-margin: 2px 0px 4px 0px;
+                    }
+          exclude: []
+        show_empty: true
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: 100%
+                grid-template-rows: auto
+                margin: '-4px 0px -4px 0px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Flur
+                  label: PowerToggle
+                  options:
+                    type: button
+                    include:
+                      - this.entity_id
+                    exclude: []
+                    discover_existing: false
+                    title: ''
+                    sort_by:
+                      - state
+                      - relative-time
+                    display_options:
+                      primary_info: default
+                      secondary_info:
+                        - relative-time
+                        - time
+                      icon: action
+                    card_mod:
+                      class: button-lozenge-left
+                    card:
+                      type: custom:scheduler-card
+                      card_mod:
+                        class: middle-contained
+                      show_state: true
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+          - ll_template: cover
+            ll_context:
+              room: Sport
+              cover: cover.fitness_cover2pmplus
+            type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 1.2fr 1.8fr 1.5fr
+              grid-template-rows: auto
+              gap: 0px 0px
+              margin: '-4px 0px -4px 0px'
+              padding: 0
+              grid-template-areas: |
+                "open slider close"
+                "open slider summer"
+            cards:
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: perform-action
+                  perform_action: script.setcoversbyroom
+                  target: {}
+                  data:
+                    room: Sport
+                    target_pos: 100
+                name: Auf
+                view_layout:
+                  grid-area: open
+                card_mod:
+                  class: button-capped-left
+              - type: custom:slider-button-card
+                entity: cover.fitness_cover2pmplus
+                slider:
+                  direction: top-bottom
+                  background: gradient
+                  use_state_color: false
+                  use_percentage_bg_opacity: false
+                  toggle_on_click: false
+                  show_track: false
+                  force_square: false
+                  invert: true
+                  show_attribute: true
+                show_name: false
+                show_state: true
+                compact: true
+                icon:
+                  show: true
+                  use_state_color: true
+                  tap_action:
+                    action: more-info
+                  icon: ''
+                action_button:
+                  mode: toggle
+                  icon: mdi:power
+                  show: false
+                  show_spinner: true
+                  tap_action:
+                    action: toggle
+                show_attribute: false
+                attribute: current_position
+                view_layout:
+                  grid-area: slider
+                card_mod:
+                  class: button-barrel-left
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: perform-action
+                  perform_action: script.setcoversbyroom
+                  target: {}
+                  data:
+                    room: Sport
+                    target_pos: 0
+                name: Zu
+                view_layout:
+                  grid-area: close
+                card_mod:
+                  class: button-capped-right
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: perform-action
+                  perform_action: script.setcoversbyroom
+                  target: {}
+                  data:
+                    room: Sport
+                    target_pos: 13
+                name: Summer
+                view_layout:
+                  grid-area: summer
+                card_mod:
+                  class: button-capped-right
+            view_layout:
+              grid-area: content
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          layout_type: custom:grid-layout
+          card_mod:
+            class: middle-left
+        filter:
+          include:
+            - area: Sport
+              label: Cover
+              options:
+                include:
+                  - this.entity_id
+                type: custom:decluttering-card
+                template: cover_slider_buttons
+                variables:
+                  - cover: this.entity_id
+                  - room: Schlafzimmer
+                card:
+                  type: custom:decluttering-card
+                  template: cover_slider_buttons
+                  variables:
+                    - cover: this.entity_id
+                    - room: Schlafzimmer
+          exclude: []
+        show_empty: true
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: 100%
+                grid-template-rows: auto
+                margin: '-4px 0px -4px 0px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Flur
+                  label: Standard-Temperatur
+                  options:
+                    type: custom:slider-button-card
+                    entity: this.entity_id
+                    slider:
+                      direction: left-right
+                      background: solid
+                      use_state_color: false
+                      use_percentage_bg_opacity: false
+                      show_track: false
+                      toggle_on_click: false
+                      force_square: false
+                    show_name: true
+                    show_state: true
+                    compact: true
+                    icon:
+                      show: true
+                      use_state_color: true
+                      tap_action:
+                        action: more-info
+                      icon: ''
+                    action_button:
+                      mode: toggle
+                      icon: mdi:power
+                      show: false
+                      show_spinner: true
+                      tap_action:
+                        action: toggle
+                    show_attribute: true
+                    name: Standard
+                    card_mod:
+                      class: button-lozenge-left
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          layout_type: custom:horizontal-layout
+          layout:
+            width: 120
+            max_cols: 10
+          card_mod:
+            class: middle-left
+        filter:
+          include:
+            - area: Flur
+              label: Info
+              options:
+                type: button
+                entity: this.entity_id
+                title: ''
+                show_name: false
+                show_state: true
+                card_mod:
+                  class: lcars-info-chip
+          exclude: []
+        show_empty: true
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
+      - type: vertical-stack
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                grid-template-columns: auto auto
+                width: 200
+                max_cols: 10
+                margin: '-8px -4px -8px -4px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Wohnzimmer
+                  label: PowerToggle
+                  options:
+                    type: button
+                    entity: this.entity_id
+                    title: ''
+                    show_name: true
+                    show_state: false
+                    card_mod:
+                      class: button-lozenge-left
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+          - type: custom:decluttering-card
+            template: climate_slider_button
+            variables:
+              - climate: climate.office_bt
+              - default_temp_entity: input_number.arbeitszimmer_default_temperatur
+              - window: binary_sensor.office_window_contact
+              - window_off_val: 'off'
+              - window_on_val: 'on'
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: '-8px -4px -4px -4px'
+                card_mod:
+                  style: |
+                    :host,#root > *{
+                     --masonry-view-card-margin: -4px;
+                    }
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Wohnzimmer
+                  label: Heizung
+                  options:
+                    include:
+                      - this.entity_id
+                    type: custom:decluttering-card
+                    template: climate_slider_show_value
+                    variables:
+                      - climate: this.entity_id
+                    card_mod:
+                      style: |
+                        :host,#root > *{
+                         --masonry-view-card-margin: -4px;
+                        }
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                   --masonry-view-card-margin: -4px;
+                        
+                }
+                #root,#root > *{
+                   --masonry-view-card-margin: -4px;
+
+                }
+          - type: custom:auto-entities
+            card:
+              type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: '-8px -4px 0px -4px'
+              card_mod:
+                class: middle-left
+            filter:
+              include:
+                - area: Sport
+                  label: Cover
+                  options:
+                    include:
+                      - this.entity_id
+                    type: custom:decluttering-card
+                    template: cover_slider_buttons
+                    variables:
+                      - cover: this.entity_id
+                      - room: Schlafzimmer
+                    card:
+                      type: custom:decluttering-card
+                      template: cover_slider_buttons
+                      variables:
+                        - cover: this.entity_id
+                        - room: Schlafzimmer
+              exclude: []
+            show_empty: true
+            card_mod:
+              class: middle-left
+              style: |
+                ha-card {
+                  background-color: #C2F970;
+                  color: red;
+                }
+                .card-content {
+                  background-color: #C2F970;
+                  color: black;
+                }
+                :host {
+                  --paper-item-icon-color: black;
+                }
+      - type: custom:decluttering-card
+        template: climate_slider_button
+        variables:
+          - climate: climate.sport_trv
+          - default_temp_entity: input_number.sport_default_temperatur
+          - window: binary_sensor.fitness_window_contact
+          - window_off_val: 'off'
+          - window_on_val: 'on'
+      - type: light
+        entity: light.flur_balken_rgb_rgbw_light_0
+      - type: custom:mushroom-light-card
+        entity: light.flur_balken_rgb_rgbw_light_0
+        use_light_color: false
+        show_color_control: true
+        show_color_temp_control: false
+        collapsible_controls: true
+      - type: horizontal-stack
+        cards:
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setentities_toggle
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: ''
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: 'Off'
+            show_state: true
+            card_mod:
+              class: button-capped-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_red
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Red
+            theme: LCARS 25C (Red Alert)
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_green
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Green
+            theme: LCARS Breen
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_blue
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Blue
+            theme: LCARS Picard II
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb
+              target: {}
+              data:
+                red: 255
+                green: 255
+                blue: 255
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: White
+            theme: LCARS 25C
+            card_mod:
+              class: button-capped-right
+      - type: horizontal-stack
+        cards:
+          - show_name: false
+            show_icon: true
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setentities_toggle
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: ''
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: 'Off'
+            show_state: true
+            card_mod:
+              class: button-capped-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_red
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Red
+            theme: LCARS 25C (Red Alert)
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_green
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Green
+            theme: LCARS Breen
+            card_mod:
+              class: button-barrel-left
+          - show_name: true
+            show_icon: false
+            type: button
+            tap_action:
+              action: perform-action
+              perform_action: script.setrgb_blue
+              target: {}
+              data:
+                entities:
+                  - light.flur_balken_rgb_rgbw_light_0
+            icon: mdi:led-strip
+            entity: light.flur_balken_rgb_rgbw_light_0
+            name: Blue
+            theme: LCARS Picard II
+            card_mod:
+              class: button-capped-right
+      - type: custom:auto-entities
+        card:
+          type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            grid-template-columns: auto
+            width: 200
+            max_cols: 10
+            margin: '-8px -4px -8px -4px'
+          card_mod:
+            class: middle-left
+        filter:
+          include:
+            - area: Flur
+              label: RGB
+              options:
+                type: horizontal-stack
+                cards:
+                  - show_name: false
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setentities_toggle
+                      target: {}
+                      data:
+                        entities:
+                          - this.entity_id
+                    icon: ''
+                    entity: this.entity_id
+                    name: 'Off'
+                    show_state: true
+                    card_mod:
+                      class: button-capped-left
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setrgb_red
+                      target: {}
+                      data:
+                        entities:
+                          - this.entity_id
+                    icon: mdi:led-strip
+                    entity: this.entity_id
+                    name: Red
+                    theme: LCARS 25C (Red Alert)
+                    card_mod:
+                      class: button-barrel-left
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setrgb_green
+                      target: {}
+                      data:
+                        entities:
+                          - this.entity_id
+                    icon: mdi:led-strip
+                    entity: this.entity_id
+                    name: Green
+                    theme: LCARS Breen
+                    card_mod:
+                      class: button-barrel-left
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setrgb_blue
+                      target: {}
+                      data:
+                        entities:
+                          - this.entity_id
+                    icon: mdi:led-strip
+                    entity: this.entity_id
+                    name: Blue
+                    theme: LCARS Picard II
+                    card_mod:
+                      class: button-capped-right
+          exclude: []
+        show_empty: true
+        card_mod:
+          class: middle-left
+          style: |
+            ha-card {
+              background-color: #C2F970;
+              color: red;
+            }
+            .card-content {
+              background-color: #C2F970;
+              color: black;
+            }
+            :host {
+              --paper-item-icon-color: black;
+            }
   - type: panel
     title: test_room_config
     path: test-room-config
@@ -712,7 +2083,7 @@ views:
             title: ''
             content: |
               <!--STYLES-->
-              <div style="display: none;">&nbsp;</div>
+              <div style="display: none;"> &nbsp;</div>
             view_layout:
               grid-area: style
             card_mod:
@@ -786,7 +2157,7 @@ views:
                         "style style"
                         "menu content"; 
                       
-                      margin-bottom: -8px;
+                      margin-bottom: 0px;
                     }
                     #root>hui-card{
                       display:block !important;
@@ -1326,11 +2697,11 @@ views:
               justify-content: end;
             }
   - type: panel
-    path: control
-    title: Control
-    theme: LCARS Classic
+    path: stats
+    title: stats
+    theme: LCARS Modern
     cards:
-      - ll_key: lcars_control
+      - ll_key: lcars_stats
         type: vertical-stack
         cards:
           - type: custom:html-card
@@ -1408,7 +2779,7 @@ views:
                         "style style"
                         "menu content"; 
                       
-                      margin-bottom: -8px;
+                      margin-bottom: 0px;
                     }
                     #root>hui-card{
                       display:block !important;
@@ -1462,9 +2833,9 @@ views:
                     type: button
                     tap_action:
                       action: navigate
-                      navigation_path: <%= context.stats_path %>
+                      navigation_path: <%= context.control_path %>
                     icon: ''
-                    name: Statistik
+                    name: Control
                     card_mod:
                       class:
                         - button-barrel-left
@@ -1588,10 +2959,72 @@ views:
                   grid-area: content
             view_layout:
               grid-area: info
-          - type: custom:decluttering-card
-            template: splitter_left_menu
-            variables:
-              - name: <%= context.room %>
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 1fr auto auto
+              grid-template-rows: 0px auto auto
+              gap: 0px 0px
+              margin: 2px -4px 6px -4px
+              padding: 0
+              grid-template-areas: |
+                "style style style"
+                "footer name closing"
+                "header name closing"
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host {
+                      --masonry-view-card-margin: 2px 4px 2px 4px;
+                      --ha-card-border-radius: 00px;
+                    }
+              - type: custom:html-card
+                title: ''
+                content: |
+                  &nbsp;
+                view_layout:
+                  grid-area: footer
+                card_mod:
+                  class:
+                    - footer-left
+                    - footer-menu-left
+              - type: custom:html-card
+                title: ''
+                content: |
+                  &nbsp;
+                view_layout:
+                  grid-area: header
+                card_mod:
+                  class:
+                    - header-left
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <h1><%= context.room %><h1>
+                view_layout:
+                  grid-area: name
+                card_mod:
+                  class:
+                    - middle-blank
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div class="closing">&nbsp;</div>
+                view_layout:
+                  grid-area: closing
+                card_mod:
+                  class:
+                    - closer
+            view_layout:
+              grid-area: info
           - type: horizontal-stack
             cards:
               - type: custom:html-card
@@ -1636,105 +3069,14 @@ views:
                       gap: 0px 0px; 
                       grid-template-areas: 
                         "style style"
-                        "menu content"; 
+                        "content content"; 
 
                     }
                     #root>hui-card{
                       display:block !important;
                     }
                     #root>*:nth-child(1) {grid-area: style;}
-                    #root>*:nth-child(2) { grid-area: menu; }
-                    #root>*:nth-child(3) { grid-area: content; }
-              - type: vertical-stack
-                cards:
-                  - type: custom:html-card
-                    title: ''
-                    content: |
-                      <div style="display: none;">&nbsp;</div>
-                    view_layout:
-                      grid-area: style
-                    card_mod:
-                      class:
-                        - middle-blank
-                      style: |
-
-                        :host {
-                          
-                          --masonry-view-card-margin: 2px 4px 2px 4px;
-                          
-                        }
-
-
-
-                        :host{
-                          
-                          #--ha-card-border-radius: 30px;
-                        }
-                        #root{
-                        --vertical-stack-card-gap: 4px;
-                        padding-right: 8px;
-                        }
-                        #root>hui-card{
-                        #display:block !important;
-                        }
-                        #root>*:last-child {
-                          flex-grow:1;
-                          
-                        }
-                  - show_name: true
-                    show_icon: false
-                    type: button
-                    tap_action:
-                      action: perform-action
-                      perform_action: script.setpowerentities
-                      target: {}
-                      data:
-                        room: <%= context.room %>
-                        label: PowerToggle
-                        target_state: false
-                    hold_action:
-                      action: perform-action
-                      perform_action: script.setpowerentities
-                      target: {}
-                      data:
-                        room: <%= context.room %>
-                        label: PowerToggle
-                        target_state: true
-                    name: AUS
-                    icon: ''
-                    card_mod:
-                      class:
-                        - button-barrel-left
-                        - menu-button
-                  - show_name: true
-                    show_icon: false
-                    type: button
-                    tap_action:
-                      action: navigate
-                      navigation_path: <%= context.config_path %>
-                    name: Config
-                    icon: ''
-                    card_mod:
-                      class:
-                        - button-barrel-left
-                        - menu-button
-                  - type: custom:html-card
-                    title: ''
-                    content: |
-                      <div style="height: 100%"></div>
-                    view_layout:
-                      grid-area: fill
-                    card_mod:
-                      class:
-                        - middle-left
-                        - middle-menu-left
-                      style: |
-                        ha-card{
-                           height: 100%;
-                         }
-                         
-                view_layout:
-                  grid-area: buttons
+                    #root>*:nth-child(2) { grid-area: content; }
               - type: vertical-stack
                 cards:
                   - type: custom:html-card
@@ -1754,157 +3096,77 @@ views:
                           }
                   - type: vertical-stack
                     cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Fenster<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
                       - type: custom:auto-entities
                         card:
                           type: custom:layout-card
                           layout_type: custom:grid-layout
                           layout:
-                            grid-template-columns: auto auto
-                            width: 200
-                            max_cols: 10
-                            margin: '-8px -4px -8px -4px'
-                          card_mod:
-                            class: middle-left
-                        filter:
-                          include:
-                            - area: <%= context.room %>
-                              label: PowerToggle
-                              options:
-                                type: button
-                                entity: this.entity_id
-                                title: ''
-                                show_name: true
-                                show_state: false
-                                card_mod:
-                                  class: button-lozenge-left
-                          exclude: []
-                        show_empty: true
-                        card_mod:
-                          class: middle-left
-                          style: |
-                            ha-card {
-                              background-color: #C2F970;
-                              color: red;
-                            }
-                            .card-content {
-                              background-color: #C2F970;
-                              color: black;
-                            }
-                            :host {
-                              --paper-item-icon-color: black;
-                            }
-                      - type: custom:auto-entities
-                        card:
-                          type: custom:layout-card
-                          layout_type: custom:grid-layout
-                          layout:
-                            grid-template-columns: auto
-                            width: 200
-                            max_cols: 10
-                            margin: 0px -4px -4px -4px
-                          card_mod:
-                            class: middle-left
-                        filter:
-                          include:
-                            - area: <%= context.room %>
-                              label: RGB
-                              options:
-                                type: horizontal-stack
-                                cards:
-                                  - show_name: false
-                                    show_icon: true
-                                    type: button
-                                    tap_action:
-                                      action: perform-action
-                                      perform_action: script.setentities_toggle
-                                      target: {}
-                                      data:
-                                        entities:
-                                          - this.entity_id
-                                    icon: ''
-                                    entity: this.entity_id
-                                    name: 'Off'
-                                    show_state: true
-                                    card_mod:
-                                      class: button-capped-left
-                                  - show_name: true
-                                    show_icon: false
-                                    type: button
-                                    tap_action:
-                                      action: perform-action
-                                      perform_action: script.setrgb_red
-                                      target: {}
-                                      data:
-                                        entities:
-                                          - this.entity_id
-                                    icon: mdi:led-strip
-                                    entity: this.entity_id
-                                    name: Red
-                                    theme: LCARS 25C (Red Alert)
-                                    card_mod:
-                                      class: button-barrel-left
-                                  - show_name: true
-                                    show_icon: false
-                                    type: button
-                                    tap_action:
-                                      action: perform-action
-                                      perform_action: script.setrgb_green
-                                      target: {}
-                                      data:
-                                        entities:
-                                          - this.entity_id
-                                    icon: mdi:led-strip
-                                    entity: this.entity_id
-                                    name: Green
-                                    theme: LCARS Breen
-                                    card_mod:
-                                      class: button-barrel-left
-                                  - show_name: true
-                                    show_icon: false
-                                    type: button
-                                    tap_action:
-                                      action: perform-action
-                                      perform_action: script.setrgb_blue
-                                      target: {}
-                                      data:
-                                        entities:
-                                          - this.entity_id
-                                    icon: mdi:led-strip
-                                    entity: this.entity_id
-                                    name: Blue
-                                    theme: LCARS Picard II
-                                    card_mod:
-                                      class: button-bullet-left
-                          exclude: []
-                        show_empty: true
-                        card_mod:
-                          class: middle-left
-                          style: |
-                            ha-card {
-                              background-color: #C2F970;
-                              color: red;
-                            }
-                            .card-content {
-                              background-color: #C2F970;
-                              color: black;
-                            }
-                            :host {
-                              --paper-item-icon-color: black;
-                            }
-                      - type: custom:decluttering-card
-                        template: climate_slider_button
-                        variables:
-                          - climate: <%= context.climate %>
-                          - default_temp_entity: <%= context.default_temp_entity%>
-                          - window: <%= context.window %>
-                          - window_off_val: <%= context.window_off_val %>
-                          - window_on_val: <%= context.window_on_val %>
-                      - type: custom:auto-entities
-                        card:
-                          type: custom:layout-card
-                          layout_type: custom:grid-layout
-                          layout:
-                            margin: '-8px -4px -4px -4px'
+                            margin: '-8px 22px -4px -4px'
                             card_mod:
                               style: |
                                 :host,#root > *{
@@ -1915,15 +3177,15 @@ views:
                         filter:
                           include:
                             - area: <%= context.room %>
-                              label: Heizung
+                              label: Fenster
                               options:
                                 include:
                                   - this.entity_id
-                                type: custom:decluttering-card
-                                template: climate_slider_show_value
-                                variables:
-                                  - climate: this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
                                 card_mod:
+                                  class: middle-left
                                   style: |
                                     :host,#root > *{
                                      --masonry-view-card-margin: -4px;
@@ -1950,32 +3212,102 @@ views:
                                --masonry-view-card-margin: -4px;
 
                             }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Schalter<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
                       - type: custom:auto-entities
                         card:
                           type: custom:layout-card
                           layout_type: custom:grid-layout
                           layout:
-                            margin: '-8px -4px 0px -4px'
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
                           card_mod:
                             class: middle-left
                         filter:
                           include:
                             - area: <%= context.room %>
-                              label: Cover
+                              label: PowerToggle
                               options:
                                 include:
                                   - this.entity_id
-                                type: custom:decluttering-card
-                                template: cover_slider_buttons
-                                variables:
-                                  - cover: this.entity_id
-                                  - room: Schlafzimmer
-                                card:
-                                  type: custom:decluttering-card
-                                  template: cover_slider_buttons
-                                  variables:
-                                    - cover: this.entity_id
-                                    - room: Schlafzimmer
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
                           exclude: []
                         show_empty: true
                         card_mod:
@@ -1991,6 +3323,368 @@ views:
                             }
                             :host {
                               --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Thermostat<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Thermostat
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                  - entity: sensor.ausen_ht_temperature
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Heizungen<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-open
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Heizung
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                  - entity: sensor.ausen_ht_temperature
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-open
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>weitere<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: ShowStats
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
                             }
                   - type: custom:html-card
                     title: ''
@@ -2100,7 +3794,7 @@ views:
                         "style style"
                         "menu content"; 
                       
-                      margin-bottom: -8px;
+                      margin-bottom: 0px;
                     }
                     #root>hui-card{
                       display:block !important;
@@ -2255,7 +3949,7 @@ views:
                                 type: button
                                 entity: this.entity_id
                                 title: ''
-                                show_name: false
+                                show_name: true
                                 show_state: true
                                 card_mod:
                                   class: lcars-info-chip
@@ -2661,13 +4355,13 @@ views:
                                 template: cover_slider_buttons
                                 variables:
                                   - cover: this.entity_id
-                                  - room: Schlafzimmer
+                                  - room: Wohnzimmer
                                 card:
                                   type: custom:decluttering-card
                                   template: cover_slider_buttons
                                   variables:
                                     - cover: this.entity_id
-                                    - room: Schlafzimmer
+                                    - room: Wohnzimmer
                           exclude: []
                         show_empty: true
                         card_mod:
@@ -2683,6 +4377,2322 @@ views:
                             }
                             :host {
                               --paper-item-icon-color: black;
+                            }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 5vh;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+  - type: panel
+    path: control
+    title: Control
+    theme: LCARS Classic
+    cards:
+      - ll_key: lcars_control
+        type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ''
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 30px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 0px;
+                  justify-content: end;
+                  display: grid !important;
+                  grid-template-columns: 1fr;
+                  grid-template-rows: 0px 1fr auto auto
+                  
+                }
+
+
+                #root>hui-card>layout-card{
+                  display:grid !important;
+                  grid-template-columns: 2;
+                  grid-template-rows:1;
+                  }
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <!--STYLES-->
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host {
+                      
+                      #--masonry-view-card-margin: 2px 4px 2px 4px;
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "menu content"; 
+                      
+                      margin-bottom: 0px;
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: menu; }
+                    #root>*:nth-child(3) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;         
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          --vertical-stack-card-gap: 4px;
+                          padding-right: 8px;
+                        }
+                        #root>hui-card{
+                          #display:block !important;
+                        }
+                        #root>*:nth-child(2) {
+                          flex-grow:1;    
+                        }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 100%"></div>
+                    view_layout:
+                      grid-area: fill
+                    card_mod:
+                      class:
+                        - middle-left
+                        - middle-menu-left
+                      style: |
+                        ha-card{
+                           height: 100%;
+                        }
+                         
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: <%= context.stats_path %>
+                    icon: ''
+                    name: Statistik
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/rooms
+                    icon: ''
+                    name: Räume
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                view_layout:
+                  grid-area: buttons
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <!--STYLES-->
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;     
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          justify-content: flex-end;
+                        }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          card_mod:
+                            class: middle-left
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: 50% 50%
+                            grid-template-rows: auto
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Battery
+                              state: <= 25
+                              options:
+                                type: custom:config-template-card
+                                entities:
+                                  - this.entity_id
+                                card:
+                                  type: button
+                                  entity: this.entity_id
+                                  show_state: true
+                                  theme: LCARS 25C (Red Alert)
+                                  card_mod:
+                                    class: button-lozenge-left
+                          exclude: []
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:horizontal-layout
+                          layout:
+                            width: 120
+                            max_cols: 10
+                            margin: 0px 0px -8px 0px;
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Info
+                              options:
+                                type: button
+                                entity: this.entity_id
+                                title: ''
+                                show_name: true
+                                show_state: true
+                                card_mod:
+                                  class: lcars-info-chip
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                              style: |
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+          - type: custom:decluttering-card
+            template: splitter_left_menu
+            variables:
+              - name: <%= context.room %>
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host{
+                      --ov-lcars-border-left: 8rem
+                    }
+                    :host{
+                     
+
+                    }
+                    :host {
+                      --masonry-view-card-margin: 4px;
+                      --slider-color: var(--lcars-card-button);
+                      --card-background-color: var(--lcars-ui-quaternary);
+                      --vertical-stack-card-gap: 8px;
+                    }
+                    ha-card{
+                      height: 100%;
+                    }
+                    hui-conditional-card{
+                      max-height: 100%;
+                    }
+
+                    :host{
+                      
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "menu content"; 
+
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: menu; }
+                    #root>*:nth-child(3) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+
+                        :host {
+                          
+                          --masonry-view-card-margin: 2px 4px 2px 4px;
+                          
+                        }
+
+
+
+                        :host{
+                          
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                        --vertical-stack-card-gap: 4px;
+                        padding-right: 8px;
+                        }
+                        #root>hui-card{
+                        #display:block !important;
+                        }
+                        #root>*:last-child {
+                          flex-grow:1;
+                          
+                        }
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setpowerentities
+                      target: {}
+                      data:
+                        room: <%= context.room %>
+                        label: PowerToggle
+                        target_state: false
+                    hold_action:
+                      action: perform-action
+                      perform_action: script.setpowerentities
+                      target: {}
+                      data:
+                        room: <%= context.room %>
+                        label: PowerToggle
+                        target_state: true
+                    name: AUS
+                    icon: ''
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: <%= context.config_path %>
+                    name: Config
+                    icon: ''
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 100%"></div>
+                    view_layout:
+                      grid-area: fill
+                    card_mod:
+                      class:
+                        - middle-left
+                        - middle-menu-left
+                      style: |
+                        ha-card{
+                           height: 100%;
+                         }
+                         
+                view_layout:
+                  grid-area: buttons
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 0px;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                      style: |
+                        :host {
+                          --masonry-view-card-margin: 4px;
+
+                        }
+                        #root{
+                              padding-right: 8px;
+                          padding-left: 8px
+                          }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: auto auto
+                            width: 200
+                            max_cols: 10
+                            margin: '-8px -4px -8px -4px'
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: PowerToggle
+                              options:
+                                type: button
+                                entity: this.entity_id
+                                title: ''
+                                show_name: true
+                                show_state: false
+                                card_mod:
+                                  class: button-lozenge-left
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: auto
+                            width: 200
+                            max_cols: 10
+                            margin: 0px -4px -4px -4px
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: RGB
+                              options:
+                                type: horizontal-stack
+                                cards:
+                                  - show_name: false
+                                    show_icon: true
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setentities_toggle
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: ''
+                                    entity: this.entity_id
+                                    name: 'Off'
+                                    show_state: true
+                                    card_mod:
+                                      class: button-capped-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_red
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Red
+                                    theme: LCARS 25C (Red Alert)
+                                    card_mod:
+                                      class: button-barrel-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_green
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Green
+                                    theme: LCARS Breen
+                                    card_mod:
+                                      class: button-barrel-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_blue
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Blue
+                                    theme: LCARS Picard II
+                                    card_mod:
+                                      class: button-bullet-left
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:decluttering-card
+                        template: climate_slider_button
+                        variables:
+                          - climate: <%= context.climate %>
+                          - default_temp_entity: <%= context.default_temp_entity%>
+                          - window: <%= context.window %>
+                          - window_off_val: <%= context.window_off_val %>
+                          - window_on_val: <%= context.window_on_val %>
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px -4px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Heizung
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: custom:decluttering-card
+                                template: climate_slider_show_value
+                                variables:
+                                  - climate: this.entity_id
+                                card_mod:
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px -4px 0px -4px'
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Cover
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: custom:decluttering-card
+                                template: cover_slider_buttons
+                                variables:
+                                  - cover: this.entity_id
+                                  - room: <%= context.room %>
+                                card:
+                                  type: custom:decluttering-card
+                                  template: cover_slider_buttons
+                                  variables:
+                                    - cover: this.entity_id
+                                    - room: <%= context.room %>
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 5vh;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+  - type: panel
+    path: control-no-heat
+    title: control-no-heat
+    theme: LCARS Cardassia
+    cards:
+      - ll_key: lcars_control_noheat
+        type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ''
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 30px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 0px;
+                  justify-content: end;
+                  display: grid !important;
+                  grid-template-columns: 1fr;
+                  grid-template-rows: 0px 1fr auto auto
+                  
+                }
+
+
+                #root>hui-card>layout-card{
+                  display:grid !important;
+                  grid-template-columns: 2;
+                  grid-template-rows:1;
+                  }
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <!--STYLES-->
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host {
+                      
+                      #--masonry-view-card-margin: 2px 4px 2px 4px;
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "menu content"; 
+                      
+                      margin-bottom: -8px;
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: menu; }
+                    #root>*:nth-child(3) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;         
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          --vertical-stack-card-gap: 4px;
+                          padding-right: 8px;
+                        }
+                        #root>hui-card{
+                          #display:block !important;
+                        }
+                        #root>*:nth-child(2) {
+                          flex-grow:1;    
+                        }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 100%"></div>
+                    view_layout:
+                      grid-area: fill
+                    card_mod:
+                      class:
+                        - middle-left
+                        - middle-menu-left
+                      style: |
+                        ha-card{
+                           height: 100%;
+                        }
+                         
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: <%= context.stats_path %>
+                    icon: ''
+                    name: Statistik
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/rooms
+                    icon: ''
+                    name: Räume
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                view_layout:
+                  grid-area: buttons
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <!--STYLES-->
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;     
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          justify-content: flex-end;
+                        }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          card_mod:
+                            class: middle-left
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: 50% 50%
+                            grid-template-rows: auto
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Battery
+                              state: <= 25
+                              options:
+                                type: custom:config-template-card
+                                entities:
+                                  - this.entity_id
+                                card:
+                                  type: button
+                                  entity: this.entity_id
+                                  show_state: true
+                                  theme: LCARS 25C (Red Alert)
+                                  card_mod:
+                                    class: button-lozenge-left
+                          exclude: []
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:horizontal-layout
+                          layout:
+                            width: 120
+                            max_cols: 10
+                            margin: 0px 0px -8px 0px;
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Info
+                              options:
+                                type: button
+                                entity: this.entity_id
+                                title: ''
+                                show_name: true
+                                show_state: true
+                                card_mod:
+                                  class: lcars-info-chip
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                              style: |
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+          - type: custom:decluttering-card
+            template: splitter_left_menu
+            variables:
+              - name: <%= context.room %>
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host{
+                      --ov-lcars-border-left: 8rem
+                    }
+                    :host{
+                     
+
+                    }
+                    :host {
+                      --masonry-view-card-margin: 4px;
+                      --slider-color: var(--lcars-card-button);
+                      --card-background-color: var(--lcars-ui-quaternary);
+                      --vertical-stack-card-gap: 8px;
+                    }
+                    ha-card{
+                      height: 100%;
+                    }
+                    hui-conditional-card{
+                      max-height: 100%;
+                    }
+
+                    :host{
+                      
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "menu content"; 
+
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: menu; }
+                    #root>*:nth-child(3) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+
+                        :host {
+                          
+                          --masonry-view-card-margin: 2px 4px 2px 4px;
+                          
+                        }
+
+
+
+                        :host{
+                          
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                        --vertical-stack-card-gap: 4px;
+                        padding-right: 8px;
+                        }
+                        #root>hui-card{
+                        #display:block !important;
+                        }
+                        #root>*:last-child {
+                          flex-grow:1;
+                          
+                        }
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: perform-action
+                      perform_action: script.setpowerentities
+                      target: {}
+                      data:
+                        room: <%= context.room %>
+                        label: PowerToggle
+                        target_state: false
+                    hold_action:
+                      action: perform-action
+                      perform_action: script.setpowerentities
+                      target: {}
+                      data:
+                        room: <%= context.room %>
+                        label: PowerToggle
+                        target_state: true
+                    name: AUS
+                    icon: ''
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: <%= context.config_path %>
+                    name: Config
+                    icon: ''
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 100%"></div>
+                    view_layout:
+                      grid-area: fill
+                    card_mod:
+                      class:
+                        - middle-left
+                        - middle-menu-left
+                      style: |
+                        ha-card{
+                           height: 100%;
+                         }
+                         
+                view_layout:
+                  grid-area: buttons
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 0px;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                      style: |
+                        :host {
+                          --masonry-view-card-margin: 4px;
+
+                        }
+                        #root{
+                              padding-right: 8px;
+                          padding-left: 8px
+                          }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: auto auto
+                            width: 200
+                            max_cols: 10
+                            margin: '-8px -4px -8px -4px'
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: PowerToggle
+                              options:
+                                type: button
+                                entity: this.entity_id
+                                title: ''
+                                show_name: true
+                                show_state: false
+                                card_mod:
+                                  class: button-lozenge-left
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: auto
+                            width: 200
+                            max_cols: 10
+                            margin: 0px -4px -4px -4px
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: RGB
+                              options:
+                                type: horizontal-stack
+                                cards:
+                                  - show_name: false
+                                    show_icon: true
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setentities_toggle
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: ''
+                                    entity: this.entity_id
+                                    name: 'Off'
+                                    show_state: true
+                                    card_mod:
+                                      class: button-capped-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_red
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Red
+                                    theme: LCARS 25C (Red Alert)
+                                    card_mod:
+                                      class: button-barrel-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_green
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Green
+                                    theme: LCARS Breen
+                                    card_mod:
+                                      class: button-barrel-left
+                                  - show_name: true
+                                    show_icon: false
+                                    type: button
+                                    tap_action:
+                                      action: perform-action
+                                      perform_action: script.setrgb_blue
+                                      target: {}
+                                      data:
+                                        entities:
+                                          - this.entity_id
+                                    icon: mdi:led-strip
+                                    entity: this.entity_id
+                                    name: Blue
+                                    theme: LCARS Picard II
+                                    card_mod:
+                                      class: button-bullet-left
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px -4px 0px -4px'
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: <%= context.room %>
+                              label: Cover
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: custom:decluttering-card
+                                template: cover_slider_buttons
+                                variables:
+                                  - cover: this.entity_id
+                                  - room: <%= context.room %>
+                                card:
+                                  type: custom:decluttering-card
+                                  template: cover_slider_buttons
+                                  variables:
+                                    - cover: this.entity_id
+                                    - room: <%= context.room %>
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 5vh;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+        card_mod:
+          style: |
+            #root{
+              gap: 0;
+              justify-content: end;
+            }
+  - type: panel
+    path: stats-demo
+    title: stats-demo
+    theme: LCARS Lower Decks II
+    cards:
+      - ll_template: lcars_stats
+        ll_context:
+          room: Wohnzimmer
+          control_path: /lovelace/wohnzimmer
+        type: vertical-stack
+        cards:
+          - type: custom:html-card
+            title: ''
+            content: |
+              <!--STYLES-->
+              <div style="display: none;">&nbsp;</div>
+            view_layout:
+              grid-area: style
+            card_mod:
+              class:
+                - middle-blank
+              style: |
+                :host{
+                  --ov-lcars-border-left: 8rem
+                }
+
+                :host {
+                  --masonry-view-card-margin: 4px;
+                  --slider-color: var(--lcars-card-button);
+                  --card-background-color: var(--lcars-ui-quaternary);
+
+                }
+                ha-card{
+                  height: 100%;
+                }
+                hui-conditional-card{
+                  max-height: 100%;
+                }
+
+                :host{
+                  
+                  #--ha-card-border-radius: 30px;
+                }
+                #root{
+                  --vertical-stack-card-gap: 0px;
+                  justify-content: end;
+                  display: grid !important;
+                  grid-template-columns: 1fr;
+                  grid-template-rows: 0px 1fr auto auto
+                  
+                }
+
+
+                #root>hui-card>layout-card{
+                  display:grid !important;
+                  grid-template-columns: 2;
+                  grid-template-rows:1;
+                  }
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <!--STYLES-->
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host {
+                      
+                      #--masonry-view-card-margin: 2px 4px 2px 4px;
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "menu content"; 
+                      
+                      margin-bottom: 0px;
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: menu; }
+                    #root>*:nth-child(3) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;         
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          --vertical-stack-card-gap: 4px;
+                          padding-right: 8px;
+                        }
+                        #root>hui-card{
+                          #display:block !important;
+                        }
+                        #root>*:nth-child(2) {
+                          flex-grow:1;    
+                        }
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 100%"></div>
+                    view_layout:
+                      grid-area: fill
+                    card_mod:
+                      class:
+                        - middle-left
+                        - middle-menu-left
+                      style: |
+                        ha-card{
+                           height: 100%;
+                        }
+                         
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/wohnzimmer
+                    icon: ''
+                    name: Control
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                  - show_name: true
+                    show_icon: false
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/rooms
+                    icon: ''
+                    name: Räume
+                    card_mod:
+                      class:
+                        - button-barrel-left
+                        - menu-button
+                view_layout:
+                  grid-area: buttons
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <!--STYLES-->
+                      <div style="display: none;">&nbsp;</div>
+                    view_layout:
+                      grid-area: style
+                    card_mod:
+                      class:
+                        - middle-blank
+                      style: |
+                        :host {
+                          #--masonry-view-card-margin: 2px 4px 2px 4px;     
+                          #--ha-card-border-radius: 30px;
+                        }
+                        #root{
+                          justify-content: flex-end;
+                        }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          card_mod:
+                            class: middle-left
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: 50% 50%
+                            grid-template-rows: auto
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: Battery
+                              state: <= 25
+                              options:
+                                type: custom:config-template-card
+                                entities:
+                                  - this.entity_id
+                                card:
+                                  type: button
+                                  entity: this.entity_id
+                                  show_state: true
+                                  theme: LCARS 25C (Red Alert)
+                                  card_mod:
+                                    class: button-lozenge-left
+                          exclude: []
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:horizontal-layout
+                          layout:
+                            width: 120
+                            max_cols: 10
+                            margin: 0px 0px -8px 0px;
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: Info
+                              options:
+                                type: button
+                                entity: this.entity_id
+                                title: ''
+                                show_name: false
+                                show_state: true
+                                card_mod:
+                                  class: lcars-info-chip
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                            }
+                              style: |
+                view_layout:
+                  grid-area: content
+            view_layout:
+              grid-area: info
+          - type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 1fr auto auto
+              grid-template-rows: 0px auto auto
+              gap: 0px 0px
+              margin: 2px -4px 6px -4px
+              padding: 0
+              grid-template-areas: |
+                "style style style"
+                "footer name closing"
+                "header name closing"
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host {
+                      --masonry-view-card-margin: 2px 4px 2px 4px;
+                      --ha-card-border-radius: 00px;
+                    }
+              - type: custom:html-card
+                title: ''
+                content: |
+                  &nbsp;
+                view_layout:
+                  grid-area: footer
+                card_mod:
+                  class:
+                    - footer-left
+                    - footer-menu-left
+              - type: custom:html-card
+                title: ''
+                content: |
+                  &nbsp;
+                view_layout:
+                  grid-area: header
+                card_mod:
+                  class:
+                    - header-left
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <h1>Wohnzimmer<h1>
+                view_layout:
+                  grid-area: name
+                card_mod:
+                  class:
+                    - middle-blank
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div class="closing">&nbsp;</div>
+                view_layout:
+                  grid-area: closing
+                card_mod:
+                  class:
+                    - closer
+            view_layout:
+              grid-area: info
+          - type: horizontal-stack
+            cards:
+              - type: custom:html-card
+                title: ''
+                content: |
+                  <div style="display: none;">&nbsp;</div>
+                view_layout:
+                  grid-area: style
+                card_mod:
+                  class:
+                    - middle-blank
+                  style: |
+                    :host{
+                      --ov-lcars-border-left: 8rem
+                    }
+                    :host{
+                     
+
+                    }
+                    :host {
+                      --masonry-view-card-margin: 4px;
+                      --slider-color: var(--lcars-card-button);
+                      --card-background-color: var(--lcars-ui-quaternary);
+                      --vertical-stack-card-gap: 8px;
+                    }
+                    ha-card{
+                      height: 100%;
+                    }
+                    hui-conditional-card{
+                      max-height: 100%;
+                    }
+
+                    :host{
+                      
+                      #--ha-card-border-radius: 30px;
+                    }
+                    #root:not(#root #root){
+
+                      display: grid; 
+                      grid-template-columns: 8em 1fr; 
+                      grid-template-rows: 0px 1fr; 
+                      gap: 0px 0px; 
+                      grid-template-areas: 
+                        "style style"
+                        "content content"; 
+
+                    }
+                    #root>hui-card{
+                      display:block !important;
+                    }
+                    #root>*:nth-child(1) {grid-area: style;}
+                    #root>*:nth-child(2) { grid-area: content; }
+              - type: vertical-stack
+                cards:
+                  - type: custom:html-card
+                    title: ''
+                    content: |
+                      <div style="height: 0px;">&nbsp;</div>
+                    card_mod:
+                      class: middle-blank
+                      style: |
+                        :host {
+                          --masonry-view-card-margin: 4px;
+
+                        }
+                        #root{
+                              padding-right: 8px;
+                          padding-left: 8px
+                          }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Fenster<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: Fenster
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Schalter<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: PowerToggle
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Thermostat<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: Thermostat
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                  - entity: sensor.ausen_ht_temperature
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>Heizungen<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-open
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: Heizung
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                  - entity: sensor.ausen_ht_temperature
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-open
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
+                            }
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        layout:
+                          grid-template-columns: 1fr auto auto
+                          grid-template-rows: 0px auto auto
+                          gap: 0px 0px
+                          margin: 2px -4px 6px -12px
+                          padding: 0
+                          grid-template-areas: |
+                            "style style style"
+                            "footer name closing"
+                            "header name closing"
+                        cards:
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div style="display: none;">&nbsp;</div>
+                            view_layout:
+                              grid-area: style
+                            card_mod:
+                              class:
+                                - middle-blank
+                              style: |
+                                :host {
+                                  --masonry-view-card-margin: 2px 4px 2px 4px;
+                                  --ha-card-border-radius: 00px;
+                                }
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: footer
+                            card_mod:
+                              class:
+                                - footer-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              &nbsp;
+                            view_layout:
+                              grid-area: header
+                            card_mod:
+                              class:
+                                - header-left
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <h1>weitere<h1>
+                            view_layout:
+                              grid-area: name
+                            card_mod:
+                              class:
+                                - middle-blank
+                          - type: custom:html-card
+                            title: ''
+                            content: |
+                              <div class="closing">&nbsp;</div>
+                            view_layout:
+                              grid-area: closing
+                            card_mod:
+                              class:
+                                - closer
+                        view_layout:
+                          grid-area: info
+                      - type: custom:auto-entities
+                        card:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            margin: '-8px 22px -4px -4px'
+                            card_mod:
+                              style: |
+                                :host,#root > *{
+                                 --masonry-view-card-margin: -4px;
+                                }
+                          card_mod:
+                            class: middle-left
+                        filter:
+                          include:
+                            - area: Wohnzimmer
+                              label: ShowStats
+                              options:
+                                include:
+                                  - this.entity_id
+                                type: history-graph
+                                entities:
+                                  - entity: this.entity_id
+                                card_mod:
+                                  class: middle-left
+                                  style: |
+                                    :host,#root > *{
+                                     --masonry-view-card-margin: -4px;
+                                    }
+                          exclude: []
+                        show_empty: true
+                        card_mod:
+                          class: middle-left
+                          style: |
+                            ha-card {
+                              background-color: #C2F970;
+                              color: red;
+                            }
+                            .card-content {
+                              background-color: #C2F970;
+                              color: black;
+                            }
+                            :host {
+                              --paper-item-icon-color: black;
+                               --masonry-view-card-margin: -4px;
+                                    
+                            }
+                            #root,#root > *{
+                               --masonry-view-card-margin: -4px;
+
                             }
                   - type: custom:html-card
                     title: ''

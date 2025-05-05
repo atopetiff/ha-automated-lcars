@@ -126,3 +126,19 @@ the following are optional and only used in room overview
 
 ## Decluttering templates
 
+# Changelog
+## 5.5.2025
+- Statistics
+  - Template
+    - shows graph for tags
+      - Fenster
+      - PowerToggle
+      - Thermostat (every thermostat graph is expanded by sensor.ausen-ht (which is my outside temperature sensor) )
+      - Heizung (every Heizung graph is expanded by sensor.ausen-ht (which is my outside temperature sensor) )
+  - Dashboard with some demos
+  - new Tag ShowStats for additional stats
+- new template `lcars_control_noheat` for rooms without heating
+- Info Section in Controll at top now shows the entity Name
+- Some Bugfixes
+  - Room Naming
+  - Info Area got overlayed
